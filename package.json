@@ -1,0 +1,39 @@
+{
+    "name": "ap_manager_sever",
+    "version": "1.0.0",
+    "description": "sever ap manager",
+    "main": "index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon --inspect src/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/thanhtung10x/Sever_AP.git"
+    },
+    "keywords": [
+        "AP",
+        "manager"
+    ],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/thanhtung10x/Sever_AP/issues"
+    },
+    "homepage": "https://github.com/thanhtung10x/Sever_AP#readme",
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.0.12",
+        "mongoose-delete": "^0.5.4",
+        "mongoose-slug-generator": "^1.0.4",
+        "multer": "^1.4.3",
+        "path": "^0.12.7"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.14"
+    }
+}
