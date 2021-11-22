@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 class UserController {
+    //tung
     //[GET] /users
     index(req, res) {
             res.sendFile(path.join(__dirname, '../../public/views/createUser.html'));
