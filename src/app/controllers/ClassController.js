@@ -15,7 +15,6 @@ class ClassControler {
     //[GET] /class/courses/:id
     courses(req, res, next) {
         Classes.find({ courseId: req.params.id}, {
-            _id: 0,
             __v: 0,
             deleted: 0,
             createdAt: 0,
