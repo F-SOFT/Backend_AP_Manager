@@ -10,7 +10,7 @@ router.put('/:id', auth.auth, permission.trainer, scoreController.edit);
 router.post('/store', auth.auth, permission.trainingStaff, scoreController.store);
 router.get('/user/:id', auth.auth, permission.trainee, scoreController.user);
 router.get('/class/:id', auth.auth, permission.trainee, scoreController.showClass);
-router.get('/:classId&:studentId', auth.auth, permission.trainee, scoreController.show);
+router.get('/:classId', auth.auth, permission.trainee, scoreController.show);
 router.get('/', auth.auth, permission.trainingStaff, scoreController.index);
 
 module.exports = router;

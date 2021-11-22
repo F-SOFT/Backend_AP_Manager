@@ -40,11 +40,11 @@ class ScoreController {
         .catch(err => res.json({message: 'Có lỗi ! Vui lòng thử lại'}));
     }
     
-    //[GET] /scores/:classId&:studentId
+    //[GET] /scores/:classId
     show(req, res, next) {
         Score.find({
             classId: req.params.classId,
-            studentId: req.params.studentId
+            studentId: req.user._id,
         })
         .populate('teacherId', 'fullName')
         .populate('studentId', 'fullName')
