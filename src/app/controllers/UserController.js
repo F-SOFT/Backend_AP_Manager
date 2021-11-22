@@ -8,7 +8,6 @@ class UserController {
     index(req, res) {
             res.sendFile(path.join(__dirname, '../../public/views/createUser.html'));
     }
-    //
     //[GET] /users
     show(req, res) {
         let page = req.query.page;
