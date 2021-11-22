@@ -2,10 +2,6 @@ const path = require('path');
 const Course = require('../models/Course');
 
 class CourseController {
-    index(req, res, next) {
-        res.sendFile(path.join(__dirname, '../../public/views/course.html'));
-    }
-
     //[GET] /courses
     show(req, res, next) {
         let page = req.query.page;
@@ -112,6 +108,7 @@ class CourseController {
             req.body, {
             new: true
         })
+        .populate('majorsId','name')
         .then(course => {
             res.json({
                 message: 'Đã sửa!',

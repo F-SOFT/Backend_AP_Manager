@@ -8,10 +8,8 @@ const course = require('../app/controllers/CourseController');
 
 router.delete('/:id', auth.auth, permission.admin, course.delete);
 router.put('/:id', auth.auth, permission.admin, course.edit);
-// router.patch('/:id', auth.auth, permission.admin, course.editTopic);
 router.patch('/change/image', auth.auth, permission.admin, upladImage.single('image'), course.changeImage);
 router.post('/store', upladImage.single('image'), course.store);
-router.get('/index', course.index);
 router.get('/majors/:id', auth.auth, permission.trainee, course.majors);
 router.get('/', auth.auth, permission.trainee, course.show);
 
