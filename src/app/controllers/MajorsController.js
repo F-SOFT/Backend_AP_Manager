@@ -4,10 +4,6 @@ const Majors = require('../models/Majors');
 
 class MajorsController {
 
-    index(req, res, next) {
-        res.sendFile(path.join(__dirname, '../../public/views/upImage.html'))
-    }
-
     show(req, res, next) {
         Majors.find({}, {
             __v: 0,
