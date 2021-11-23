@@ -81,61 +81,95 @@ class CourseController {
 
     //[POST] /course/store
     store(req, res, next) {
-        const course = new Course({
-            name: req.body.name,
-            description: req.body.description,
-            level: req.body.level,
-            majorsId: req.body.majorsId,
-        });
-        if( req.file) {
-            course.image = req.file.filename;
-        course.save()
-        .then(course => {
-            res.json({
-                message: 'Thêm mới thành công.',
-                course
+        if ( !req.body.name == '' &&
+             !req.body.description == '' &&
+             !req.body.level == '' &&
+             ! req.body.majorsId == ''
+         ) {
+            Course.findOne({ name: req.body.name})
+            .then(course => {
+                if (course) {
+                    res.json({message: 'Tên Khóa học này đã tồn tại. Vui lòng thử lại!'})
+                } else {
+                    const course = new Course({
+                        name: req.body.name,
+                        description: req.body.description,
+                        level: req.body.level,
+                        majorsId: req.body.majorsId,
+                    });
+                    if(req.file) {
+                        course.image = req.file.filename
+                    }
+                       return course.save();
+                }
             })
-        })
-        .catch(err =>{ 
-            res.json({message: 'Có lỗi! Vui lòng thử lại'})
-        });
+            .then(course => {
+                Course.findOne({_id : course.id})
+                .populate('majorsId','name')
+                .then(data => {
+                    res.json({
+                        message: 'Thêm mới thành công.',
+                        data
+                    })
+                })
+                .catch(err =>{ 
+                    res.json({message: 'Có lỗi! Vui lòng thử lại'})
+                });
+            })
+            
+        } else {
+            res.json({message: 'Vui lòng nhập đủ các trường.'})
         }
+        
+        
     }
 
     //[PUT] /courses/:id
     edit(req, res, next) {
-        Course.findOneAndUpdate({ _id: req.params.id },
-            req.body, {
-            new: true
-        })
-        .populate('majorsId','name')
-        .then(course => {
-            res.json({
-                message: 'Đã sửa!',
-                course
-            })
-        })
-        .catch(err => {
-            res.json({ message: 'Có lỗi! Vui lòng thử lại'})
-        });
+        if ( !req.body.name == '' &&
+             !req.body.description == '' &&
+             !req.body.level == '' &&
+             ! req.body.majorsId == ''
+         ) {
+             Course.findOneAndUpdate({ _id: req.params.id },
+                 req.body, {
+                 new: true
+             })
+             .populate('majorsId','name')
+             .then(course => {
+                 res.json({
+                     message: 'Đã sửa!',
+                     course
+                 })
+             })
+             .catch(err => {
+                 res.json({ message: 'Có lỗi! Vui lòng thử lại'})
+             });
+         } else {
+            res.json({message: 'Vui lòng nhập đủ các trường.'})
+         }
     }
 
     //[PATCH] /course/change/image
     changeImage(req, res, next) {
-        Course.findOneAndUpdate({ _id: req.params.id }, {
-            image: req.file.filename
-        }, {
-            new: true
-        })
-        .then(course => {
-            res.json({
-                message: 'Đã sửa!',
-                course
+        if (req.file) {
+            Course.findOneAndUpdate({ _id: req.params.id }, {
+                image: req.file.filename
+            }, {
+                new: true
             })
-        })
-        .catch(err => {
-            res.json({ message: 'Có lỗi! Vui lòng thử lại'})
-        });
+            .then(course => {
+                res.json({
+                    message: 'Đã sửa!',
+                    course
+                })
+            })
+            .catch(err => {
+                res.json({ message: 'Có lỗi! Vui lòng thử lại'})
+            });
+        } else {
+            res.json({message: 'Vui lòng chọn một file.'})
+        }
     }
 
     //[DELETE] /courses/:id
