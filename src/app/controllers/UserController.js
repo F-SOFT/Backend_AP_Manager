@@ -119,7 +119,12 @@ class UserController {
 
     //[POST] /users/register
     register(req, res) {
-        User.findOne({ username: req.body.username })
+        if (
+            !req.body.username == '' &&
+            !req.body.password == '' &&
+            !req.body.userName == ''
+        ) {
+            User.findOne({ username: req.body.username })
             .then(user => {
                 if (user) {
                     res.json({ message: 'Tên người dùng đã tồn tại! Vui lòng thử lại.' });
@@ -142,11 +147,31 @@ class UserController {
                     res.json({ message: 'Có lỗi! Vui lòng thử lại' })
                 });
             })     
+        } else {
+            res.json({
+                message: 'Vui lòng nhập đầy đủ thông tin.'
+            })
+        }
+        
     }
 
     //[POST] /users/store
     store(req, res) {
-        User.findOne({ username: req.body.username })
+        if (
+            !req.body.username == '' &&
+            !req.body.password == '' &&
+            !req.body.fullName == '' &&
+            !req.body.userCode == '' &&
+            !req.body.nationality == '' &&
+            !req.body.rolesId == '' &&
+            !req.body.majorsId == '' &&
+            !req.body.email == '' &&
+            !req.body.phone == '' &&
+            !req.body.address == '' &&
+            !req.body.gender == '' &&
+            !req.body.DoB == ''
+        ) {
+            User.findOne({ username: req.body.username })
             .populate('rolesId','name')
             .populate('majorsId','name')
             .then(users => {
@@ -185,6 +210,12 @@ class UserController {
                     res.json({ message: 'Có lỗi! Vui lòng thử lại' })
                 });
             })     
+        } else {
+            res.json({
+                message: 'Vui lòng nhập đầy đủ thông tin.'
+            })
+        }
+        
     }
 
     //[POST] /users/login
@@ -212,57 +243,83 @@ class UserController {
 
     //[PUT] /users/:id
     edit(req, res, next) {
-        User.findOneAndUpdate({ 
-            _id: req.params.id 
-        },
-            req.body, {
-            new: true
-        }
-        )
-        .populate('majorsId','name')
-        .populate('rolesId','name')
-        .then(user => {
-                res.json({
-                    message: 'Đã sửa!',
-                    user
+        if (
+            !req.body.username == '' &&
+                !req.body.password == '' &&
+                !req.body.fullName == '' &&
+                !req.body.userCode == '' &&
+                !req.body.nationality == '' &&
+                !req.body.rolesId == '' &&
+                !req.body.majorsId == '' &&
+                !req.body.email == '' &&
+                !req.body.phone == '' &&
+                !req.body.address == '' &&
+                !req.body.gender == '' &&
+                !req.body.DoB == ''
+        ) {
+            User.findOneAndUpdate({ 
+                _id: req.params.id 
+            },
+                req.body, {
+                new: true
+            }
+            )
+            .populate('majorsId','name')
+            .populate('rolesId','name')
+            .then(user => {
+                    res.json({
+                        message: 'Đã sửa!',
+                        user
+                    })
                 })
-            })
-            .catch(err => {
-                res.json({ message: 'Có lỗi! Vui lòng thử lại!!' });
-            })
+                .catch(err => {
+                    res.json({ message: 'Có lỗi! Vui lòng thử lại!!' });
+                })
+        } else {
+            res.json({ message: 'Có lỗi! Vui lòng kiểm tra lại' });
         }
-
+        
+    }
     //[PATCH] /users/change/avatar
     changeAvatar(req, res) {
-        User.findOneAndUpdate({_id: req.user._id}, { 
-            avatar: req.file.filename
-        })
-            .then(user => {
-                res.json({ message: 'Đã sửa!'})
+        if (req.file){
+            User.findOneAndUpdate({_id: req.user._id}, { 
+                avatar: req.file.filename
             })
-            .catch(err => {
-                res.json({ message: 'Có lỗi! Vui lòng thử lại.'})
-            });
+                .then(user => {
+                    res.json({ message: 'Đã sửa!'})
+                })
+                .catch(err => {
+                    res.json({ message: 'Có lỗi! Vui lòng thử lại.'})
+                });
+        } else {
+            res.json({
+                message: 'Vui lòng chọn file!'
+            })
+        }
     }
 
     //[PATCH] /users/change/password
     changePassword(req, res) {
-        User.findOneAndUpdate({ _id: req.user._id},{ 
-            password: req.body.password 
-        }, {
-            new: true
-        })
-            .then(user => {
-                res.json({
-                     message: 'Đã sửa!',
-                     user
-                })
+        if (!req.body.password == '') {
+            User.findOneAndUpdate({ _id: req.user._id},{ 
+                password: req.body.password 
+            }, {
+                new: true
             })
-            .catch(err => {
-                res.json({ message: 'Có lỗi! Vui lòng thử lại.'})
-            });
+                .then(user => {
+                    res.json({
+                         message: 'Đã sửa!',
+                         user
+                    })
+                })
+                .catch(err => {
+                    res.json({ message: 'Có lỗi! Vui lòng thử lại.'})
+                });
+        } else {
+            res.json({ message: 'Mật khẩu không thể để trống!'})
         }
-
+    }
     //[DELETE] /users/
     delete(req, res) {
         User.findOneAndDelete({ _id: req.params.id })
