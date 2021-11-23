@@ -84,7 +84,7 @@ class UserController {
             updatedAt: 0,
             slug:0
         })
-        .populate('majorsId','name -_id')
+        .populate('majorsId','name image -_id')
         .then(user => {
             res.json(user)
         })
