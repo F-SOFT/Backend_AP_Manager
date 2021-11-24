@@ -2,6 +2,10 @@ const path = require('path');
 const Course = require('../models/Course');
 
 class CourseController {
+
+    test(req, res, next) {
+        res.sendFile(path.join(__dirname, '../../public/view.html'))
+    }
     //[GET] /courses
     show(req, res, next) {
         let page = req.query.page;
@@ -84,38 +88,42 @@ class CourseController {
         if ( !req.body.name == '' &&
              !req.body.description == '' &&
              !req.body.level == '' &&
-             ! req.body.majorsId == ''
+             !req.body.majorsId == '' &&
+             req.image
          ) {
-            Course.findOne({ name: req.body.name})
-            .then(course => {
-                if (course) {
-                    res.json({message: 'Tên Khóa học này đã tồn tại. Vui lòng thử lại!'})
-                } else {
-                    const course = new Course({
-                        name: req.body.name,
-                        description: req.body.description,
-                        level: req.body.level,
-                        majorsId: req.body.majorsId,
-                    });
-                    if(req.file) {
-                        course.image = req.file.filename
+            if(req.image.mimetype == 'image/png' || req.image.mimetype == 'image/jpeg') {
+                Course.findOne({ name: req.body.name})
+                .then(course => {
+                    if (course) {
+                        res.json({message: 'Tên Khóa học này đã tồn tại. Vui lòng thử lại!'})
+                    } else {
+                        const course = new Course({
+                            name: req.body.name,
+                            description: req.body.description,
+                            level: req.body.level,
+                            majorsId: req.body.majorsId,
+                            image: req.file.filename
+                        });
+                        return course.save();
                     }
-                       return course.save();
-                }
-            })
-            .then(course => {
-                Course.findOne({_id : course.id})
-                .populate('majorsId','name')
-                .then(data => {
-                    res.json({
-                        message: 'Thêm mới thành công.',
-                        data
-                    })
                 })
-                .catch(err =>{ 
-                    res.json({message: 'Có lỗi! Vui lòng thử lại'})
-                });
-            })
+                .then(course => {
+                    Course.findOne({_id : course._id})
+                    .populate('majorsId','name')
+                    .then(data => {
+                        res.json({
+                            message: 'Thêm mới thành công.',
+                            data
+                        })
+                    })
+                    .catch(err =>{ 
+                        res.json({message: 'Có lỗi! Vui lòng thử lại'})
+                    });
+                })
+            } else {
+                res.json({message: 'Vui lòng tải tiệp có định dạng JPG hoặc PNG '})
+            }
+            
             
         } else {
             res.json({message: 'Vui lòng nhập đủ các trường.'})
@@ -129,7 +137,7 @@ class CourseController {
         if ( !req.body.name == '' &&
              !req.body.description == '' &&
              !req.body.level == '' &&
-             ! req.body.majorsId == ''
+             !req.body.majorsId == ''
          ) {
              Course.findOneAndUpdate({ _id: req.params.id },
                  req.body, {
@@ -152,21 +160,25 @@ class CourseController {
 
     //[PATCH] /course/change/image
     changeImage(req, res, next) {
-        if (req.file) {
-            Course.findOneAndUpdate({ _id: req.params.id }, {
-                image: req.file.filename
-            }, {
-                new: true
-            })
-            .then(course => {
-                res.json({
-                    message: 'Đã sửa!',
-                    course
+        if (req.iamge) {
+            if(req.image.mimetype == 'image/png' || req.image.mimetype == 'image/jpeg'){
+                Course.findOneAndUpdate({ _id: req.params.id }, {
+                    image: req.file.filename
+                }, {
+                    new: true
                 })
-            })
-            .catch(err => {
-                res.json({ message: 'Có lỗi! Vui lòng thử lại'})
-            });
+                .then(course => {
+                    res.json({
+                        message: 'Đã sửa!',
+                        course
+                    })
+                })
+                .catch(err => {
+                    res.json({ message: 'Có lỗi! Vui lòng thử lại'})
+                });
+            } else {
+                res.json({message: 'Vui lòng tải tiệp có định dạng JPG hoặc PNG '})
+            }
         } else {
             res.json({message: 'Vui lòng chọn một file.'})
         }
