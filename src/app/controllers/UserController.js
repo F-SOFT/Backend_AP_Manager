@@ -93,6 +93,28 @@ class UserController {
         })
     }
     
+    //[GET] /users/find/:rolesId
+    find(req, res) {
+        User.findOne({ rolesId: req.params.id }, {
+            username: 0,
+            password: 0,
+            rolesId: 0,
+            deleted: 0,
+            _id: 0,
+            __v: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            slug:0
+        })
+        .populate('majorsId','name image -_id')
+        .then(user => {
+            res.json(user)
+        })
+        .catch(err => {
+            res.json({ message: 'Có lỗi! Vui lòng thử lại' });
+        })
+    }
+    
     // [GET] /users/majors/:id
     majors(req, res, next) {
         User.find({majorsId: req.params.id}, {
