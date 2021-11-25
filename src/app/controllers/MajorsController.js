@@ -1,6 +1,7 @@
 const path = require('path');
 
 const Majors = require('../models/Majors');
+const { majors } = require('./CourseController');
 
 class MajorsController {
 
@@ -15,64 +16,99 @@ class MajorsController {
 
     //[POST] /majors/store
     store(req, res) {
-        const majors = new Majors({
-            name: req.body.name,
-            description: req.body.description
-        })
-        if(req.file) {
-            majors.image = req.file.filename
+        if ( !req.body.name == '' &&
+             !req.body.description == '' &&
+             req.image
+         ) {
+            if(req.image.mimetype == 'image/png' || req.image.mimetype == 'image/jpeg') {
+                Majors.findOne({name: req.body.name})
+                .then(majors => {
+                    if(majors) {
+                        res.json({message: 'Chuyên nghành này đã tồn tại. Vui lòng thử lại!'})
+                    } else {
+                        const majors = new Majors({
+                            name: req.body.name,
+                            description: req.body.description,
+                            iamge: req.file.filename
+                        })
+                        return majors.save();
+                    }
+                })
+                .then(data => {
+                    Majors.findOne({_id : data._id})
+                    .then(majors => {
+                        res.json({ 
+                            message: 'Tạo mới thành công.',
+                            majors
+                        });
+                    })
+                })
+                .catch(err => {
+                    res.json({ message: 'Có lỗi! Vui lòng thử lại'})
+                });
+            } else {
+                res.json({message: 'Vui lòng tải tiệp có định dạng JPG hoặc PNG '})
+            }
+            
+        } else {
+            res.json({message: 'Vui lòng nhập đủ các trường.'})
         }
-        majors.save()
-
-        .then(data => {
-            res.json({ 
-                message: 'Tạo mới thành công.',
-                data
-            });
-        })
-        .catch(err => {
-            res.json({ message: 'Có lỗi! Vui lòng thử lại'})
-        });
+       
         
     }
 
     //[PUT] /majors/:id
     edit(req, res) {
-        Majors.findOneAndUpdate({
-            _id: req.params.id
-        }, 
-            req.body, {
-            new: true
-        })
-        .then(majors => {
-            res.json({
-                message: 'Đã sửa!',
-                majors
+        if ( !req.body.name == '' &&
+             !req.body.description == ''
+         ) {
+            Majors.findOneAndUpdate({
+                _id: req.params.id
+            }, 
+                req.body, {
+                new: true
             })
-        })
-        .catch(err => {
-            res.json({ message: 'Có lỗi! Vui lòng thử lại'})
-        });
+            .then(majors => {
+                res.json({
+                    message: 'Đã sửa!',
+                    majors
+                })
+            })
+            .catch(err => {
+                res.json({ message: 'Có lỗi! Vui lòng thử lại'})
+            });
+        } else {
+            res.json({message: 'Vui lòng nhập đủ các trường.'})
+        }
+        
     }
 
     //[PATCH] /majors/change/image
     changeImage(req, res) {
-        Majors.findByIdAndUpdate({
-            _id: req.params.id
-        }, {
-            image: req.file.filename
-        }, {
-            new: true
-        })
-        .then(majors => {
-            res.json({
-                message: 'Đã sửa!',
-                majors
-            })
-        })
-        .catch(err => {
-            res.json({ message: 'Có lỗi! Vui lòng thử lại'})
-        });
+        if (req.iamge) {
+            if(req.image.mimetype == 'image/png' || req.image.mimetype == 'image/jpeg'){
+                Majors.findByIdAndUpdate({
+                    _id: req.params.id
+                }, {
+                    image: req.file.filename
+                }, {
+                    new: true
+                })
+                .then(majors => {
+                    res.json({
+                        message: 'Đã sửa!',
+                        majors
+                    })
+                })
+                .catch(err => {
+                    res.json({ message: 'Có lỗi! Vui lòng thử lại'})
+                });
+            } else {
+                res.json({message: 'Vui lòng tải tiệp có định dạng JPG hoặc PNG '})
+            }
+        } else {
+                res.json({message: 'Vui lòng chọn một file.'})
+        }
     }
     //[DELETE] /majors/:id
     delete(req, res) {
