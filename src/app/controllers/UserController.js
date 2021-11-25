@@ -95,7 +95,7 @@ class UserController {
     
     //[GET] /users/find/:rolesId
     find(req, res) {
-        User.findOne({ rolesId: req.params.id }, {
+        User.find({ rolesId: req.params.id }, {
             username: 0,
             password: 0,
             rolesId: 0,
