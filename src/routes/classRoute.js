@@ -10,8 +10,9 @@ router.patch('/remove/student/:id',auth.auth, permission.trainingStaff, classCot
 router.patch('/student/:id',auth.auth, permission.trainingStaff, classCotroller.editStudent);
 router.put('/:id',auth.auth, permission.trainingStaff, classCotroller.edit);
 router.post('/store', auth.auth, permission.trainingStaff, classCotroller.store);
-router.get('/:id',auth.auth, permission.trainee, classCotroller.show);
 router.get('/courses/:id',auth.auth, permission.trainee, classCotroller.courses);
+router.get('/user', auth.auth, permission.trainee, classCotroller.user);
+router.get('/:id',auth.auth, permission.trainee, classCotroller.show);
 router.get('/', auth.auth, permission.trainingStaff, classCotroller.index);
 
 module.exports = router;

@@ -45,6 +45,18 @@ class ClassControler {
         .catch(err => res.json({ message: 'Có lỗi ! Vui lòng thử lại'}));
     }
 
+    //[GET] /class/user
+    user(req, res, next) {
+        Classes.find({ studentId : req.user.id })
+        .then(classes => {
+            res.json(classes)
+        })
+        .catch(err => {
+            console.log(err)
+            res.json({ message: 'Có lỗi! Vui lòng thử lại'})
+        });
+    }
+
     //[POST] /class/store
     store(req, res, next) {
         const classes = new Classes(req.body);
