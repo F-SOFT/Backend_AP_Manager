@@ -16,7 +16,7 @@ class ScoreController {
 
     //[GET] /scores/class/:id
     showClass(req, res, next) {
-        Score.find({classId: req.params.id},{
+        Score.findOne({classId: req.params.id, studentId: req.user.id},{
             deleted: 0,
             createdAt: 0,
             updatedAt: 0
@@ -29,7 +29,7 @@ class ScoreController {
     
     //[GET] /scores/user/:id
     user(req, res, next) {
-        Score.find({studentId: req.params.id},{
+        Score.find({studentId: req.user.id},{
             deleted: 0,
             createdAt: 0,
             updatedAt: 0
@@ -55,44 +55,51 @@ class ScoreController {
 
     //[POST] /scores/store
     store(req, res, next) {
-        const score = new Score({
-            point: '00:00',
-            status: 'chưa chấm',
-            comment: 'chưa có comment',
-            dotTime:'default',
-            teacherId: req.body.teacherId,
-            studentId: req.body.studentId,
-            courseId: req.body.courseId,
-        })
-        score.save()
-        .then(score => {
-            res.json({ 
-                message: 'Đăng kí khóa học thành công.',
-                score
+        if(!req.body.teacherId == '' && !req.body.studentId == '' && !req.body.courseId == '') {
+            const score = new Score({
+                point: '00:00',
+                status: 'chưa chấm',
+                comment: 'chưa có comment',
+                dotTime:'default',
+                teacherId: req.body.teacherId,
+                studentId: req.body.studentId,
+                courseId: req.body.courseId,
             })
-        })
-        .catch(err => res.json({ message: 'Có lỗi ! Vui lòng thử lại'}));
+            score.save()
+            .then(score => {
+                res.json({ 
+                    message: 'Đăng kí khóa học thành công.',
+                })
+            })
+            .catch(err => res.json({ message: 'Có lỗi ! Vui lòng thử lại'}));
+        } else {
+            res.json({ message:'Vui lòng nhập đủ các trường.'})
+        }
     }
 
     //[PUT]/scores/:id
     edit(req, res, next) {
-        Score.findOneAndUpdate({
-            _id: req.params.id 
-        }, {
-            point: req.body.point,
-            status: 'đã chấm',
-            comment: req.body.comment,
-            dotTime: req.body.dotTime
-        }, {
-            new: true
-        })
-        .then(score => {
-            res.json({ 
-                message: 'Đã chấm.',
-                score
+        if(!req.body.point == '' && req.body.comment == '' && req.body.dotTime == '') {
+            Score.findOneAndUpdate({
+                _id: req.params.id
+            }, {
+                point: req.body.point,
+                status: 'đã chấm',
+                comment: req.body.comment,
+                dotTime: req.body.dotTime
+            }, {
+                new: true
             })
-        })
-        .catch(err => res.json({ message: 'Có lỗi ! Vui lòng thử lại'}));
+            .then(score => {
+                res.json({ 
+                    message: 'Đã chấm.',
+                    score
+                })
+            })
+            .catch(err => res.json({ message: 'Có lỗi ! Vui lòng thử lại'}));
+        } else {
+            res.json({ message:'Vui lòng nhập đủ các trường.'})
+        }
     }
 
     //[DELETE]/scores/:id
