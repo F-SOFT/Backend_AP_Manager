@@ -14,6 +14,7 @@ router.patch('/change/password',auth.auth, permission.trainee, userController.ch
 router.put('/:id', auth.auth, permission.trainee, userController.edit);
 router.delete('/:id',auth.auth, permission.admin, userController.delete);
 router.get('/infomation', auth.auth, permission.trainee, userController.info);
+router.get('/search', auth.auth, permission.trainingStaff, userController.search);
 router.get('/majors/:id', auth.auth, permission.trainingStaff, userController.majors);
 router.get('/find/:id', auth.auth, permission.trainingStaff, userController.find);
 router.get('/index', userController.index);
