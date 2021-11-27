@@ -5,10 +5,6 @@ const User = require('../models/User');
 
 class UserController {
     //[GET] /users
-    index(req, res) {
-            res.sendFile(path.join(__dirname, '../../public/views/createUser.html'));
-    }
-    //[GET] /users
     show(req, res) {
         let page = req.query.page;
         let limit = req.query.limit;
@@ -204,7 +200,7 @@ class UserController {
             .populate('majorsId','name')
             .then(users => {
                 if (users) {
-                    res.json({ message: 'Username đã tồn tại Vui lòng thử lại.' })
+                    res.json({ message: 'Username đã tồn tại! Vui lòng thử lại.' })
                 } else {
                     const {username, fullName, userCode, email, phone} = req.body;
                     const username1 = username.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
