@@ -20,36 +20,45 @@ class TopicController {
 
     //[POST] /topics/store
     store(req, res, next) {
-        const topic = new Topic(req.body)
-        topic.save()
-        .then(topic =>{
-            res.json({
-                 message: 'Thêm mới thành công.',
-                 topic
-                })
-        })
-        .catch(err => {
-            res.json({ message:' Có lỗi! Vui lòng thử lại'})
-        });
+        if (!req.name == '' && !req.description == '') {
+            const topic = new Topic(req.body)
+            topic.save()
+            .then(topic =>{
+                res.json({
+                    message: 'Thêm mới thành công.',
+                    topic
+                    })
+            })
+            .catch(err => {
+                res.json({ message:' Có lỗi! Vui lòng thử lại'})
+            });
+        } else {
+            res.json({ message:'Vui lòng nhập đủ các trường.'})
+        }
+        
     }
 
     //[PUT] /topic/:id
     edit(req, res, next) {
-        Topic.findOneUpdates({ 
-                _id: req.params.id 
-            },
-                req.body, {
-                new: true
-            }
-
-        )
-        .then(topic => {
-            res.json({ 
-                message: 'Đã sửa!',
-                topic
+        if (!req.name == '' && !req.description == '') {
+            Topic.findOneUpdates({ 
+                    _id: req.params.id 
+                },
+                    req.body, {
+                    new: true
+                }
+    
+            )
+            .then(topic => {
+                res.json({ 
+                    message: 'Đã sửa!',
+                    topic
+                })
             })
-        })
-        .catch(err => res.json({ message: 'Có lỗi ! Vui lòng thử lại'}));
+            .catch(err => res.json({ message: 'Có lỗi ! Vui lòng thử lại'}));
+        } else {
+            res.json({ message:'Vui lòng nhập đủ các trường.'})
+        }
     }
 
     //[DELETE] /topic/:id
