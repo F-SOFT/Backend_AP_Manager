@@ -7,7 +7,6 @@ class ClassControler {
             __v: 0,
             deleted: 0,
             slug: 0,
-            studentId: 0
         })
         .populate('teacherId', 'fullName')
         .then(classes => res.json(classes))
