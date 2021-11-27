@@ -22,8 +22,9 @@ const User = new Schema({
     address: { type: String },
     nationality: { type: String },
     gender: { type: String },
-    DoB: { type: String },
+    DoB: { type: Date },
     slug: { type: String, slug: 'fullName', unique: true },
+    keySearch: { type: String},
     rolesId: { type: String, ref: 'Role' },
     majorsId: { type: String, ref: 'Majors' },
 }, {

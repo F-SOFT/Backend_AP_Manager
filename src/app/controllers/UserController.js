@@ -138,12 +138,21 @@ class UserController {
 
     }
 
+    //[GET] /users/search
+    search(req, res) {
+        let ojbKey = {};
+        if (req.query.keySearch !== '') ojbKey.keySearch = new RegExp(req.query.keySearch, 'i')
+        User.find(ojbKey)
+        .then( user => res.json({message: 'ok', user}))
+        .catch(err => res.json({message: 'Có lỗi ! Vui lòng thử lại'}));
+    }
+
     //[POST] /users/register
     register(req, res) {
         if (
-            !req.body.username == '' &&
-            !req.body.password == '' &&
-            !req.body.userName == ''
+            req.body.username !== '' &&
+            req.body.password !== '' &&
+            req.body.userName !== ''
         ) {
             User.findOne({ username: req.body.username })
             .then(user => {
@@ -178,27 +187,32 @@ class UserController {
 
     //[POST] /users/store
     store(req, res) {
-        if (
-            !req.body.username == '' &&
-            !req.body.password == '' &&
-            !req.body.fullName == '' &&
-            !req.body.userCode == '' &&
-            !req.body.nationality == '' &&
-            !req.body.rolesId == '' &&
-            !req.body.majorsId == '' &&
-            !req.body.email == '' &&
-            !req.body.phone == '' &&
-            !req.body.address == '' &&
-            !req.body.gender == '' &&
-            !req.body.DoB == ''
-        ) {
+        if (req.body.username !== '' &&
+            req.body.password !== '' &&
+            req.body.fullName !== '' &&
+            req.body.userCode !== '' &&
+            req.body.nationality !== '' &&
+            req.body.rolesId !== '' &&
+            req.body.majorsId !== '' &&
+            req.body.email !== '' &&
+            req.body.phone !== '' &&
+            req.body.address !== '' &&
+            req.body.gender !== '' &&
+            req.body.DoB !== '') {
             User.findOne({ username: req.body.username })
             .populate('rolesId','name')
             .populate('majorsId','name')
             .then(users => {
                 if (users) {
-                    res.json({ message: 'Username đã tồn tại! Vui lòng thử lại.' })
+                    res.json({ message: 'Username đã tồn tại Vui lòng thử lại.' })
                 } else {
+                    const {username, fullName, userCode, email, phone} = req.body;
+                    const username1 = username.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                    const fullName1 = fullName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                    const userCode1 = userCode.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                    const email1 = email.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                    const phone1 = phone.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                    const keySearch = username1  + ' ' + fullName1 + ' ' + userCode1 + ' ' + email1 + ' ' + phone1 + ' ' + username + ' ' + fullName + ' ' + userCode + ' ' + email + ' ' + phone;
                     const user = new User({
                         username: req.body.username,
                         password: req.body.password,
@@ -212,6 +226,7 @@ class UserController {
                         address: req.body.address,
                         gender: req.body.gender,
                         DoB: req.body.DoB,
+                        keySearch: keySearch
                     })
                     return user.save();
                     
@@ -264,19 +279,18 @@ class UserController {
 
     //[PUT] /users/:id
     edit(req, res, next) {
-        if (
-            !req.body.username == '' &&
-                !req.body.password == '' &&
-                !req.body.fullName == '' &&
-                !req.body.userCode == '' &&
-                !req.body.nationality == '' &&
-                !req.body.rolesId == '' &&
-                !req.body.majorsId == '' &&
-                !req.body.email == '' &&
-                !req.body.phone == '' &&
-                !req.body.address == '' &&
-                !req.body.gender == '' &&
-                !req.body.DoB == ''
+        if (req.body.username !== '' &&
+            req.body.password !== '' &&
+            req.body.fullName !== '' &&
+            req.body.userCode !== '' &&
+            req.body.nationality !== '' &&
+            req.body.rolesId !== '' &&
+            req.body.majorsId !== '' &&
+            req.body.email !== '' &&
+            req.body.phone !== '' &&
+            req.body.address !== '' &&
+            req.body.gender !== '' &&
+            req.body.DoB !== ''
         ) {
             User.findOneAndUpdate({ 
                 _id: req.params.id 
@@ -322,7 +336,7 @@ class UserController {
 
     //[PATCH] /users/change/password
     changePassword(req, res) {
-        if (!req.body.password == '') {
+        if (req.body.password !== '') {
             User.findOneAndUpdate({ _id: req.user._id},{ 
                 password: req.body.password 
             }, {
