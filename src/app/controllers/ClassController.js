@@ -7,7 +7,6 @@ class ClassControler {
             __v: 0,
             deleted: 0,
             slug: 0,
-            studentId: 0
         })
         .populate('teacherId', 'fullName')
         .then(classes => res.json(classes))
@@ -47,7 +46,16 @@ class ClassControler {
 
     //[GET] /class/user
     user(req, res, next) {
-        Classes.find({ studentId : req.user.id })
+        Classes.find({ studentId : req.user.id }, {
+            __v: 0,
+            slug: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            deleted: 0,
+            courseId: 0,
+            teacherId: 0,
+            studentId: 0
+        })
         .then(classes => {
             res.json(classes)
         })

@@ -22,6 +22,26 @@ class ScheduleController {
         })
     }
 
+    //[GET] /schedules/classCode/:id
+    showUser(req, res, next) {
+        Schedule.find({}, {
+            _id: 0,
+            __v: 0,
+            createdA: 0,
+            updatedAt: 0,
+            deleted: 0,
+        })
+        .populate('classId', 'name classCode -_id')
+        .populate('courseId', 'name -_id')
+        .then( schedule => {
+           let data = schedule.filter(x =>  x.classId.classCode === req.params.id)
+           res.json(data)
+        })
+        .catch(err => {
+            res.json({ message: 'Có lỗi! Vui lòng thử lại'})
+        });
+    }
+
     //[POST] /schedules/store
     store(req, res, next) {
         const schedule = new Schedule(req.body)
