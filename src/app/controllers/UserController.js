@@ -45,11 +45,11 @@ class UserController {
         } else{
             User.countDocuments({})
             .then(total => {
-                User.countDocuments({majorsId: '617d7ab0c5c0dfd2a8714e0d'})
+                User.countDocuments({majorsId: '617d7ab0c5c0dfd2a8714e0d', rolesId: '617d04e40682a0a38c0421ca'})
                 .then(computings => {
-                    User.countDocuments({majorsId: '617d7ac2c5c0dfd2a8714e14'})
+                    User.countDocuments({majorsId: '617d7ac2c5c0dfd2a8714e14', rolesId: '617d04e40682a0a38c0421ca'})
                     .then(businesses => {
-                        User.countDocuments({majorsId: '617d7aa1c5c0dfd2a8714e06'})
+                        User.countDocuments({majorsId: '617d7aa1c5c0dfd2a8714e06', rolesId: '617d04e40682a0a38c0421ca'})
                         .then(graphic => {
                             res.json({
                                 _total: total,
@@ -161,7 +161,7 @@ class UserController {
             gender: 0,
             DoB: 0
         })
-        .then( user => res.json({message: 'ok', user}))
+        .then( user => res.json(user))
         .catch(err => res.json({message: 'Có lỗi ! Vui lòng thử lại'}));
     }
 
@@ -297,8 +297,7 @@ class UserController {
 
     //[PUT] /users/edit/:id
     edit(req, res, next) {
-        if( req.body.username !== '' &&
-            req.body.fullName !== '' &&
+        if( req.body.fullName !== '' &&
             req.body.userCode !== '' &&
             req.body.nationality !== '' &&
             req.body.rolesId !== '' &&
@@ -308,41 +307,44 @@ class UserController {
             req.body.address !== '' &&
             req.body.gender !== '' &&
             req.body.DoB !== '') {
-                const {username, fullName, userCode, email, phone} = req.body;
-                const username1 = username.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-                const fullName1 = fullName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-                const userCode1 = userCode.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-                const email1 = email.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-                const phone1 = phone.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-                const keySearch = username1  + ' ' + fullName1 + ' ' + userCode1 + ' ' + email1 + ' ' + phone1 + ' ' + username + ' ' + fullName + ' ' + userCode + ' ' + email + ' ' + phone;
-
-                User.findOneAndUpdate({
-                    _id : req.params.id
-                }, {username: req.body.username,
-                    fullName: req.body.fullName,
-                    userCode: req.body.userCode,
-                    nationality: req.body.nationality,
-                    rolesId: req.body.rolesId,
-                    majorsId: req.body.majorsId,
-                    email: req.body.email,
-                    phone: req.body.phone,
-                    address: req.body.address,
-                    gender: req.body.gender,
-                    DoB: req.body.DoB,
-                    keySearch: keySearch
-                }, {
-                    new: true
-                })
-                .populate('majorsId','name')
-                .populate('rolesId','name')
+                User.findOne({_id: req.params.id})
                 .then(user => {
-                    res.json({
-                        message: 'Đã sửa!',
-                        user
+                    const username = user.username;
+                    const { fullName, userCode, email, phone} = req.body;
+                    const username1 = username.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                    const fullName1 = fullName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                    const userCode1 = userCode.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                    const email1 = email.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                    const phone1 = phone.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                    const keySearch = username1  + ' ' + fullName1 + ' ' + userCode1 + ' ' + email1 + ' ' + phone1 + ' ' + username + ' ' + fullName + ' ' + userCode + ' ' + email + ' ' + phone;
+    
+                    User.findOneAndUpdate({
+                        _id : req.params.id
+                    }, {fullName: req.body.fullName,
+                        userCode: req.body.userCode,
+                        nationality: req.body.nationality,
+                        rolesId: req.body.rolesId,
+                        majorsId: req.body.majorsId,
+                        email: req.body.email,
+                        phone: req.body.phone,
+                        address: req.body.address,
+                        gender: req.body.gender,
+                        DoB: req.body.DoB,
+                        keySearch: keySearch
+                    }, {
+                        new: true
                     })
-                })
-                .catch(err => {
-                    res.json({ message: 'Có lỗi! Vui lòng thử lại!!' });
+                    .populate('majorsId','name')
+                    .populate('rolesId','name')
+                    .then(user => {
+                        res.json({
+                            message: 'Đã sửa!',
+                            user
+                        })
+                    })
+                    .catch(err => {
+                        res.json({ message: 'Có lỗi! Vui lòng thử lại!!' });
+                    })
                 })
         } else {
             res.json({
@@ -361,39 +363,42 @@ class UserController {
                 req.body.address !== '' &&
                 req.body.gender !== '' &&
                 req.body.DoB !== '' ) {
-                    const email = user.email;
-                    const userCode = user.userCode;
-                    const {username, fullName, phone} = req.body;
-                    const username1 = username.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-                    const fullName1 = fullName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-                    const userCode1 = userCode.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-                    const email1 = email.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-                    const phone1 = phone.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-                    const keySearch = username1  + ' ' + fullName1 + ' ' + userCode1 + ' ' + email1 + ' ' + phone1 + ' ' + username + ' ' + fullName + ' ' + userCode + ' ' + email + ' ' + phone;
-                    User.findOneAndUpdate({
-                        _id : req.user.id
-                    }, {username: req.body.username,
-                        password: req.body.password,
-                        fullName: req.body.fullName,
-                        phone: req.body.phone,
-                        address: req.body.address,
-                        gender: req.body.gender,
-                        DoB: req.body.DoB,
-                        avatar: req.file.filename,
-                        keySearch: keySearch
-                    }, {
-                        new: true,
-                    })
-                    .populate('majorsId','name')
-                    .populate('rolesId','name')
-                    .then(data => {
-                        res.json({
-                            message: 'Đã sửa!',
-                            data
+                    User.findOne({_id: req.user._id})
+                    .then(user => {
+                        const email = user.email;
+                        const userCode = user.userCode;
+                        const {username, fullName, phone} = req.body;
+                        const username1 = username.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                        const fullName1 = fullName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                        const userCode1 = userCode.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                        const email1 = email.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                        const phone1 = phone.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                        const keySearch = username1  + ' ' + fullName1 + ' ' + userCode1 + ' ' + email1 + ' ' + phone1 + ' ' + username + ' ' + fullName + ' ' + userCode + ' ' + email + ' ' + phone;
+                        User.findOneAndUpdate({
+                            _id : req.user.id
+                        }, {username: req.body.username,
+                            password: req.body.password,
+                            fullName: req.body.fullName,
+                            phone: req.body.phone,
+                            address: req.body.address,
+                            gender: req.body.gender,
+                            DoB: req.body.DoB,
+                            avatar: req.file.filename,
+                            keySearch: keySearch
+                        }, {
+                            new: true,
                         })
-                    })
-                    .catch(err => {
-                        res.json({ message: 'Có lỗi! Vui lòng thử lại!!' });
+                        .populate('majorsId','name')
+                        .populate('rolesId','name')
+                        .then(data => {
+                            res.json({
+                                message: 'Đã sửa!',
+                                data
+                            })
+                        })
+                        .catch(err => {
+                            res.json({ message: 'Có lỗi! Vui lòng thử lại!!' });
+                        })
                     })
             } else {
                 res.json({
