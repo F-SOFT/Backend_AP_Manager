@@ -161,6 +161,7 @@ class UserController {
             gender: 0,
             DoB: 0
         })
+        .limit(15)
         .then( user => res.json(user))
         .catch(err => res.json({message: 'Có lỗi ! Vui lòng thử lại'}));
     }

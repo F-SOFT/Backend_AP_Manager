@@ -83,6 +83,27 @@ class CourseController {
         .catch(err =>res.json({message : 'Có lỗi ! Vui lòng thử lại'}));
     }
 
+    //[GET] / course/search
+    search(req, res) {
+        let ojbkey = {};
+        if(req.query.keySearch !== '') ojbkey.keySearch = new RegExp(req.query.keySearch, 'i')
+        Course.find(ojbkey, {
+            _id: 0,
+            __v: 0,
+            deleted: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            description: 0,
+            image: 0,
+            slug: 0,
+            keySearch: 0,
+            majorsId: 0,
+            level: 0
+        })
+        .then(course => res.json(course))
+        .catch(err => res.json({message: 'Có lỗi ! Vui lòng thử lại'}));
+    }
+
     //[POST] /course/store
     store(req, res, next) {
         if ( !req.body.name == '' &&
@@ -97,11 +118,16 @@ class CourseController {
                     if (course) {
                         res.json({message: 'Tên Khóa học này đã tồn tại. Vui lòng thử lại!'})
                     } else {
+                        const {name, description} = req.body;
+                        const name1 = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                        const description1 = description.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+                        const keySearch = name + " " + description + " " + name1 + " " + description1;
                         const course = new Course({
                             name: req.body.name,
                             description: req.body.description,
                             level: req.body.level,
                             majorsId: req.body.majorsId,
+                            keySearch: keySearch,
                             image: req.file.filename
                         });
                         return course.save();
@@ -139,8 +165,19 @@ class CourseController {
              !req.body.level == '' &&
              !req.body.majorsId == ''
          ) {
-             Course.findOneAndUpdate({ _id: req.params.id },
-                 req.body, {
+            const {name, description} = req.body;
+            const name1 = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+            const description1 = description.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+            const keySearch = name + " " + description + " " + name1 + " " + description1;
+             Course.findOneAndUpdate({ 
+                 _id: req.params.id 
+                }, {
+                    name: req.body.name,
+                    description: req.body.description,
+                    level: req.body.level,
+                    majorsId: req.body.majorsId,
+                    keySearch: keySearch
+                }, {
                  new: true
              })
              .populate('majorsId','name')
