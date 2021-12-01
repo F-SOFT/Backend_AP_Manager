@@ -9,6 +9,7 @@ class ClassControler {
             slug: 0,
         })
         .populate('teacherId', 'fullName')
+        .populate('courseId', 'name')
         .then(classes => res.json(classes))
         .catch(err => res.json({ message: 'Có lỗi ! Vui lòng thử lại'}));
     }
