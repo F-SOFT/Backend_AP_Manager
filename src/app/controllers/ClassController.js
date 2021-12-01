@@ -67,7 +67,13 @@ class ClassControler {
 
     //[POST] /class/store
     store(req, res, next) {
-        const classes = new Classes(req.body);
+        const classes = new Classes({
+            name: req.body.name,
+            classCode: req.body.classCode,
+            teacherId: req.body.teacherId,
+            studentId: req.body.studentId,
+            courseId: req.body.courseId
+        });
         classes.save()
         .then(classes => {
             res.json({ 
