@@ -88,7 +88,6 @@ class CourseController {
         let ojbkey = {};
         if(req.query.keySearch !== '') ojbkey.keySearch = new RegExp(req.query.keySearch, 'i')
         Course.find(ojbkey, {
-            _id: 0,
             __v: 0,
             deleted: 0,
             createdAt: 0,
