@@ -20,7 +20,7 @@ class UserController {
                 slug:0,
                 keySearch: 0
             })
-            .sort({ createdAt: -1 })
+            .sort({ fullName: 1 })
             .limit(limit)
             .skip(skip)
             .populate('rolesId','name')
@@ -154,7 +154,6 @@ class UserController {
             slug:0,
             keySearch: 0,
             email: 0,
-            userCode: 0,
             phone: 0,
             address: 0,
             nationality: 0,
