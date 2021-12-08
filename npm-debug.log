@@ -10,8 +10,8 @@
 6 silly lifecycle ap_manager_sever@1.0.0~predev: no script for predev, continuing
 7 info lifecycle ap_manager_sever@1.0.0~dev: ap_manager_sever@1.0.0
 8 verbose lifecycle ap_manager_sever@1.0.0~dev: unsafe-perm in lifecycle true
-9 verbose lifecycle ap_manager_sever@1.0.0~dev: PATH: C:\Users\thanh\AppData\Roaming\nvm\v7.7.3\node_modules\npm\bin\node-gyp-bin;C:\Users\thanh\OneDrive\Documents\Dev\Backend_AP_Manager\node_modules\.bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\MongoDB\Server\5.0\bin;%NVM_HOME%;%NVM_SYMLINK%;C:\Program Files\nodejs\;C:\Users\thanh\AppData\Local\Microsoft\WindowsApps;C:\Users\thanh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\thanh\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\thanh\AppData\Roaming\npm
-10 verbose lifecycle ap_manager_sever@1.0.0~dev: CWD: C:\Users\thanh\OneDrive\Documents\Dev\Backend_AP_Manager
+9 verbose lifecycle ap_manager_sever@1.0.0~dev: PATH: C:\Users\thanh\AppData\Roaming\nvm\v7.7.3\node_modules\npm\bin\node-gyp-bin;C:\Users\thanh\OneDrive\Documents\Dev\F-SOFT\Backend_AP_Manager\node_modules\.bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\MongoDB\Server\5.0\bin;C:\Users\thanh\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\dotnet\;C:\Users\thanh\AppData\Local\Microsoft\WindowsApps;C:\Users\thanh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\thanh\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\thanh\.dotnet\tools
+10 verbose lifecycle ap_manager_sever@1.0.0~dev: CWD: C:\Users\thanh\OneDrive\Documents\Dev\F-SOFT\Backend_AP_Manager
 11 silly lifecycle ap_manager_sever@1.0.0~dev: Args: [ '/d /s /c', 'nodemon --inspect src/index.js' ]
 12 silly lifecycle ap_manager_sever@1.0.0~dev: Returned: code: 1  signal: null
 13 info lifecycle ap_manager_sever@1.0.0~dev: Failed to exec dev script
@@ -26,7 +26,7 @@
 14 verbose stack     at maybeClose (internal/child_process.js:899:16)
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
 15 verbose pkgid ap_manager_sever@1.0.0
-16 verbose cwd C:\Users\thanh\OneDrive\Documents\Dev\Backend_AP_Manager
+16 verbose cwd C:\Users\thanh\OneDrive\Documents\Dev\F-SOFT\Backend_AP_Manager
 17 error Windows_NT 10.0.19043
 18 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "dev"
 19 error node v7.7.3
