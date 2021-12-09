@@ -70,10 +70,8 @@ class UserController {
 
     //[GET] /users/information
     info(req, res) {
-        User.findOne({ _id: req.user._id }, {
-            username: 0, password: 0, rolesId: 0, deleted: 0, _id: 0, __v: 0, createdAt: 0, updatedAt: 0, slug:0, keySearch: 0
-        })
-        .populate('majorsId','name image -_id')
+        User.findOne({ _id: req.user._id }, { rolesId: 0, deleted: 0, _id: 0, __v: 0, createdAt: 0, updatedAt: 0, slug:0, keySearch: 0 })
+        .populate('majorsId','name image')
         .then(user => {
             res.json(user)
         })
