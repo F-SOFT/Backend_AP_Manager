@@ -89,16 +89,7 @@ class UserController {
     //[GET] /users/personal/:id
     personal(req, res) {
         User.findOne({ _id: req.params.id}, {
-            username: 0,
-            password: 0,
-            rolesId: 0,
-            deleted: 0,
-            _id: 0,
-            __v: 0,
-            createdAt: 0,
-            updatedAt: 0,
-            slug:0,
-            keySearch: 0
+            username: 0, password: 0, rolesId: 0, deleted: 0, _id: 0, __v: 0, createdAt: 0, updatedAt: 0, slug:0, keySearch: 0
         })
         .populate('majorsId','name -_id')
         .then(user => {

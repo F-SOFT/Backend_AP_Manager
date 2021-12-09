@@ -11,6 +11,7 @@ router.patch('/student/:id',auth.auth, permission.trainingStaff, classCotroller.
 router.put('/:id',auth.auth, permission.trainingStaff, classCotroller.edit);
 router.post('/store', auth.auth, permission.trainingStaff, classCotroller.store);
 router.get('/courses/:id',auth.auth, permission.trainee, classCotroller.courses);
+router.get('/check', auth.auth, permission.trainingStaff, classCotroller.check);
 router.get('/user', auth.auth, permission.trainee, classCotroller.user);
 router.get('/:id',auth.auth, permission.trainee, classCotroller.show);
 router.get('/', auth.auth, permission.trainingStaff, classCotroller.index);
