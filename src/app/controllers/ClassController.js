@@ -9,14 +9,9 @@ class ClassControler {
 
         if(page && limit) {
             Classes.find({},{
-                __v: 0,
-                deleted: 0,
-                slug: 0,
+                __v: 0, deleted: 0, slug: 0,
             })
-            .limit(limit)
-            .skip(skip)
-            .populate('teacherId', 'fullName')
-            .populate('courseId', 'name')
+            .limit(limit) .skip(skip) .populate('teacherId', 'fullName') .populate('courseId', 'name')
             .then(classes => {
                 Classes.countDocuments({})
                 .then (total =>{
@@ -33,17 +28,26 @@ class ClassControler {
                     })
                 })
             })
-            .catch(err => res.status(500).json({ 
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({ 
                 success: false,
                 message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
-            }));
+                })
+            });
         } else {
             Classes.countDocuments({})
             .then(total => res.status(200).json({
                 success: true,
                 total
             }))
-            .catch(err => res.json({ message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'}));
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({ 
+                success: false,
+                message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
+                })
+            });
         }
     }
 
@@ -62,10 +66,13 @@ class ClassControler {
             success: true,
             classes
         }))
-        .catch(err => res.status(500).json({ 
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ 
             success: false,
             message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
-        }));
+            })
+        });
     }
 
     //[GET] /class/:id
@@ -88,8 +95,8 @@ class ClassControler {
         .catch(err => {
             console.log(err);
             res.status(500).json({ 
-                success: false,
-                message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
+            success: false,
+            message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
             })
         });
     }
@@ -113,13 +120,35 @@ class ClassControler {
             })
         })
         .catch(err => {
+            console.log(err);
             res.status(500).json({ 
-                success: false,
-                message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
+            success: false,
+            message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
             })
         });
     }
 
+    //[GET] /class/check
+    check(req, res) {
+        const {classId , studentId} = req.query;
+        Classes.findOne({ _id: classId, studentId: studentId })
+            .then(data => {
+                if(data) {
+                    res.status(400).json({
+                        success: false,
+                        message: `Sinh viên đã có trong lớp học.`
+                    })
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({ 
+                success: false,
+                message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
+                })
+            });
+
+    }
     //[POST] /class/store
     store(req, res) {
         const { name, classCode, teacherId, courseId } = req.body;
@@ -150,10 +179,13 @@ class ClassControler {
                     classInfomation
                 })
             })
-            .catch(err => res.status(500).json({ 
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({ 
                 success: false,
-                message: 'Lỗi Server! Vui lòng thử lại sau ít phút..'
-            }));
+                message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
+                })
+            });
         } else {
             return res.status(400).json({
                 success: false,
@@ -197,10 +229,13 @@ class ClassControler {
                     classInfomation
                 })
             })
-            .catch(err => res.status(500).json({ 
-                success: false, 
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({ 
+                success: false,
                 message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
-            }));
+                })
+            });
         } else {
             return res.status(400).json({
                 success: false,
@@ -212,68 +247,38 @@ class ClassControler {
     //[PATCH] /class/student/:id
     editStudent(req, res) {
         const studentId = req.body.studentId;
-        let id;
-        let arrId = []
-        if(typeof studentId === 'string') {
-            id = studentId;
-        } else if(typeof studentId === 'object'){
-            for(let i=0 ; i < studentId.length; i++) {
-                arrId.push(studentId[i])
-            }
-        }
-        
-        if(id !== undefined){
-            Classes.findOne({studentId: id})
-                .then(data => {
-                    if(data) {
-                        res.status(400).json({
-                            success: false,
-                            message: `Sinh viên có mã [] đã có trong lớp.`
-                        })
-                    } else {
-                        return Classes.findOneAndUpdate({ 
-                            _id: req.params.id
-                        },{
-                            $push: {
-                                studentId: studentId
-                            }
-                        }, {
-                            new: true
-                        })
-                    }
-                })
-                .then(data => {
-                    return Classes.findOne({_id: data._id}, {
-                        deleted: 0, createdAt: 0, updatedAt: 0, _id: 0, __v: 0, slug: 0
-                        })
-                        .populate('studentId', 'fullName userCode -_id')
-                        .populate('teacherId', 'fullName -_id')
-                        .populate('courseId', 'name -_id')
-                })
-                .then(classInfomation => {
-                    res.status(200).json({
-                        success: true,
-                        message: 'Đã thêm sinh viên vào lớp học.',
-                        classInfomation
+        if(studentId !== undefined){
+            Classes.findOneAndUpdate({ 
+                _id: req.params.id
+            },{
+                $push: {
+                    studentId: studentId
+                }
+            }, {
+                new: true
+            })
+            .then(data => {
+                return Classes.findOne({ _id: data._id}, {
+                    deleted: 0, createdAt: 0, updatedAt: 0, _id: 0, __v: 0, slug: 0
                     })
+                    .populate('studentId', 'fullName userCode -_id')
+                    .populate('teacherId', 'fullName -_id')
+                    .populate('courseId', 'name -_id')
+            })
+            .then(classInfomation => {
+                res.status(200).json({
+                    success: true,
+                    message: 'Đã thêm sinh viên vào lớp học.',
+                    classInfomation
                 })
-                .catch(err =>{ 
-                    console.log(err);
-                    res.status(500).json({ 
-                        success: false,
-                        message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
-                    })
-                });
-        } else if (arrId.length > 1) {
-            Classes.findOne({studentId: arrId})
-                .then(data => res.json('tung'))
-                .catch(err =>{ 
-                    console.log(err);
-                    res.status(500).json({ 
-                        success: false,
-                        message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
-                    })
-                });
+            })
+            .catch(err =>{ 
+                console.log(err);
+                res.status(500).json({ 
+                    success: false,
+                    message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
+                })
+            });
         } else {
             res.status(400).json({ 
                  success: false,
@@ -285,35 +290,37 @@ class ClassControler {
 
     //[PATCH] /class/remove/student/:id
     removeStudent(req, res) {
-        const { studentId, fullName, studentCode } = req.body;
+        const studentId = req.body.studentId;
         if(studentId !== undefined) {
-            Classes.findOne({studentId: studentId})
-            .then(data => {
-                if(data) {
-                    Classes.findOneAndUpdate({
-                        _id: req.params.id
-                    }, {
-                        $pull: {
-                            studentId: req.body.studentId
-                        }
-                    }, {
-                        new: true
-                    })
-                } else {
-                    res.status(404).json({
-                        success: false,
-                        message: `Không tìm thấy sinh viên [${studentCode}] trong lớp học.`
-                    })
+            Classes.findOneAndUpdate({
+                _id: req.params.id
+            }, {
+                $pull: {
+                    studentId: req.body.studentId
                 }
+            }, {
+                new: true
             })
-            .then(classes => res.json({
-                message: 'Đã xóa sinh viên khỏi lớp học.',
-                classes
-            }))
+            .then(data => {
+                return Classes.findOne({ _id: data._id}, {
+                    deleted: 0, createdAt: 0, updatedAt: 0, _id: 0, __v: 0, slug: 0
+                    })
+                    .populate('studentId', 'fullName userCode -_id')
+                    .populate('teacherId', 'fullName -_id')
+                    .populate('courseId', 'name -_id')
+            })
+            .then(classInfomation => {
+                res.status(200).json({
+                    success: true,
+                    message: 'Đã xóa sinh viên khỏi lớp học.',
+                    classInfomation
+                })
+            })
             .catch(err => {
-                res.status(500).json({
-                    success: false,
-                    message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
+                console.log(err);
+                res.status(500).json({ 
+                success: false,
+                message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
                 })
             });
         } else {
@@ -328,11 +335,18 @@ class ClassControler {
     //[DELETE] /class/:id
     delete(req, res) {
         Classes.findOneAndDelete({_id: req.params.id})
-        .then(classes => res.json({ 
+        .then(classes => res.status(200).json({ 
+            success: true,
             message: 'Xóa thành công.',
             classes
         }))
-        .catch(err => res.json({ message: 'Lỗi Server! Vui lòng thử lại sau ít phút..'}));
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ 
+            success: false,
+            message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
+            })
+        });
     }
 }
 
