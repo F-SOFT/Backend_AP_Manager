@@ -17,6 +17,7 @@ router.get('/infomation', auth.auth, permission.trainee, userController.info);
 router.get('/search', auth.auth, permission.trainingStaff, userController.search);
 router.get('/majors/:id', auth.auth, permission.trainingStaff, userController.majors);
 router.get('/find/:id', auth.auth, permission.trainingStaff, userController.find);
+router.get('/personal/:id', auth.auth, permission.trainee, userController.personal);
 router.get('/', auth.auth, permission.trainingStaff, userController.show);
 
 module.exports = router;
