@@ -9,6 +9,5 @@ router.delete('/:id', auth.auth, permission.trainingStaff, scheduleController.de
 router.put('/:id', auth.auth, permission.trainingStaff, scheduleController.edit);
 router.post('/store', auth.auth, permission.trainingStaff, scheduleController.store);
 router.get('/classCode/:id', auth.auth, permission.trainee, scheduleController.showUser);
-router.get('/:id', auth.auth, permission.trainee, scheduleController.showClass);
 
 module.exports = router;
