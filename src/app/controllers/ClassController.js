@@ -44,7 +44,7 @@ class ClassControler {
             .catch(err => {
                 console.log(err);
                 res.status(500).json({ 
-                success: false,
+                success: false, 
                 message: 'Lỗi Server! Vui lòng thử lại sau ít phút.'
                 })
             });
@@ -78,12 +78,7 @@ class ClassControler {
     //[GET] /class/:id
     show(req, res) {
         Classes.findOne({_id: req.params.id},{
-            _id: 0,
-            __v: 0,
-            deleted: 0,
-            createdAt: 0,
-            updatedAt: 0,
-            slug: 0
+            _id: 0, __v: 0, deleted: 0, createdAt: 0, updatedAt: 0, slug: 0
         })
         .populate('studentId', 'fullName userCode')
         .populate('teacherId', 'fullName')
@@ -103,15 +98,11 @@ class ClassControler {
 
     //[GET] /class/user
     user(req, res) {
-        Classes.find({ studentId : req.user.id }, {
-            __v: 0,
-            slug: 0,
-            createdAt: 0,
-            updatedAt: 0,
-            deleted: 0,
-            courseId: 0,
-            teacherId: 0,
-            studentId: 0
+        const studentId = req.user.id;
+        const teacherId = req.user.id
+        console.log(studentId, teacherId)
+        Classes.find({$or: [{ studentId: studentId }, {teacherId: teacherId}] }, {
+            __v: 0, slug: 0, createdAt: 0, updatedAt: 0, deleted: 0, courseId: 0, teacherId: 0, studentId: 0
         })
         .then(classes => {
             res.status(200).json({
