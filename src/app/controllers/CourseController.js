@@ -120,7 +120,7 @@ class CourseController {
         if ( name !== undefined && description !== undefined && level !== undefined && majorsId !== undefined, req.file ) {
             if(req.image.mimetype == 'image/png' || req.image.mimetype == 'image/jpeg') {
                 Course.findOne({ name: req.body.name})
-                .then(scourse => {
+                .then(course => {
                     if (course) {
                         res.status(400).json({
                             success: false,
@@ -181,7 +181,7 @@ class CourseController {
                     Course.findOneAndUpdate({ 
                         _id: req.params.id 
                     }, {
-                        name: name, description: description, level: level, majorsId: majorsId, keySearch: keySearch, image
+                        name: name, description: description, level: level, majorsId: majorsId, keySearch: keySearch, image: image
                     }, {
                         new: true
                     })
