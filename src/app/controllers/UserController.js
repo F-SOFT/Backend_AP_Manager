@@ -296,10 +296,10 @@ class UserController {
     
     //[PUT] /users/update/infomation
     update(req, res, next) {
-        const {username, password, fullName, phone, address, gender, DoB} = req.body;
+        const {username, fullName, phone, address, gender, DoB} = req.body;
         if (req.file) {
             const avatar = req.file.filename;
-            if(username !== undefined && password !== undefined && fullName !== undefined && phone !== undefined && address !== undefined && gender !== undefined && DoB !== undefined) {
+            if(username !== undefined && fullName !== undefined && phone !== undefined && address !== undefined && gender !== undefined && DoB !== undefined) {
                 User.findOne({_id: req.user._id})
                     .then(user => {
                         const email = user.email;
@@ -311,10 +311,10 @@ class UserController {
                         const email1 = email.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
                         const phone1 = phone.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
                         const keySearch = username1  + ' ' + fullName1 + ' ' + userCode1 + ' ' + email1 + ' ' + phone1 + ' ' + username + ' ' + fullName + ' ' + userCode + ' ' + email + ' ' + phone;
-                        return User.findOneAndUpdate({ _id : req.user.id }, { username, password, fullName, phone, address, gender, DoB, avatar, keySearch }, { new: true })
+                        return User.findOneAndUpdate({ _id : req.user.id }, { username, fullName, phone, address, gender, DoB, avatar, keySearch }, { new: true })
                     })
                     .then(data => {
-                        return User.findOne({_id : data._id}, {rolesId: 0, majorsId: 0,  deleted: 0, _id: 0, __v: 0, createdAt: 0, updatedAt: 0, slug:0, keySearch: 0})
+                        return User.findOne({_id : data._id}, {password: 0, rolesId: 0, majorsId: 0,  deleted: 0, _id: 0, __v: 0, createdAt: 0, updatedAt: 0, slug:0, keySearch: 0})
                         .populate('majorsId', 'name').populate('rolesId', 'name')
                     })
                     .then(user => {
@@ -338,8 +338,8 @@ class UserController {
                 })
             }
         } else {
-            const {username, password, fullName, phone, address, gender, DoB} = req.body;
-            if(username !== undefined && password !== undefined && fullName !== undefined && phone !== undefined && address !== undefined && gender !== undefined && DoB !== undefined) {
+            const {username, fullName, phone, address, gender, DoB} = req.body;
+            if(username !== undefined && fullName !== undefined && phone !== undefined && address !== undefined && gender !== undefined && DoB !== undefined) {
                 User.findOne({_id : req.user.id})
                 .then(user => {
                     const email = user.email;
@@ -351,11 +351,11 @@ class UserController {
                     const email1 = email.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
                     const phone1 = phone.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
                     const keySearch = username1  + ' ' + fullName1 + ' ' + userCode1 + ' ' + email1 + ' ' + phone1 + ' ' + username + ' ' + fullName + ' ' + userCode + ' ' + email + ' ' + phone;
-                    return User.findOneAndUpdate({ _id : req.user.id }, { username, password, fullName, phone, address, gender, DoB, keySearch }, { new: true })
+                    return User.findOneAndUpdate({ _id : req.user.id }, { username, fullName, phone, address, gender, DoB, keySearch }, { new: true })
                     
                 })
                 .then(data => {
-                    return User.findOne({_id : data._id}, {rolesId: 0, majorsId: 0,  deleted: 0, _id: 0, __v: 0, createdAt: 0, updatedAt: 0, slug:0, keySearch: 0})
+                    return User.findOne({_id : data._id}, {password: 0, rolesId: 0, majorsId: 0,  deleted: 0, _id: 0, __v: 0, createdAt: 0, updatedAt: 0, slug:0, keySearch: 0})
                     .populate('majorsId', 'name').populate('rolesId', 'name')
                 })
                 .then(user => {
@@ -378,29 +378,6 @@ class UserController {
                     message: 'Vui lòng nhập đầy đủ thông tin.'
                 })
             }
-        }
-    }
-
-    //[PATCH] /users/change/avatar
-    changeAvatar(req, res) {
-        if (req.file){
-            User.findOneAndUpdate({_id: req.user._id}, { 
-                avatar: req.file.filename
-            })
-                .then(user => {
-                    res.json({ message: 'Đã sửa!'})
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(500).json({ 
-                        success: false,
-                        message: 'Lỗi Server! Vui lòng thử lại sau ít phút.' 
-                    });
-                })
-        } else {
-            res.json({
-                message: 'Vui lòng chọn file!'
-            })
         }
     }
 
