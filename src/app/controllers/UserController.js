@@ -49,8 +49,8 @@ class UserController {
                         .then(graphic => {
                             res.status(200).json({
                                 _total: total,
-                                _totalcomputing: computings,
                                 _totalGraphic: graphic,
+                                _totalcomputing: computings,
                                 _totalBusinesses: businesses
                             })
                         })
