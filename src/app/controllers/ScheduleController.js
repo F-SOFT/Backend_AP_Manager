@@ -8,7 +8,7 @@ class ScheduleController {
         .populate('classId', 'name classCode -_id').populate('courseId', 'name -_id')
         .then( schedule => {
            let data = schedule.filter(x =>  x.classId.classCode === req.params.id)
-           resstatus(200).json({
+           res.status(200).json({
                success: true,
                data
            })
