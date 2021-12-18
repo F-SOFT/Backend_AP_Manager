@@ -117,9 +117,10 @@ class CourseController {
     //[POST] /course/store
     store(req, res, next) {
         const {name, description, level, majorsId} = req.body;
+        const image = req.file.filename;
         if ( name !== undefined && description !== undefined && level !== undefined && majorsId !== undefined, req.file ) {
             if(req.image.mimetype == 'image/png' || req.image.mimetype == 'image/jpeg') {
-                Course.findOne({ name: req.body.name})
+                Course.findOne({ name: name})
                 .then(course => {
                     if (course) {
                         res.status(400).json({
@@ -127,11 +128,10 @@ class CourseController {
                             message: 'Tên Khóa học này đã tồn tại. Vui lòng thử lại!'
                         })
                     } else {
-                        const {name, description} = req.body;
                         const name1 = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
                         const description1 = description.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
                         const keySearch = name + " " + description + " " + name1 + " " + description1;
-                        const course = new Course({ name: name,  description: description,  level: level, majorsId: majorsId });
+                        const course = new Course({ name: name,  description: description,  level: level, majorsId: majorsId, keySearch: keySearch, image: image});
                         return course.save();
                     }
                 })
@@ -155,7 +155,7 @@ class CourseController {
                 });
             } else {
                 res.status(400).json({
-                    success: true,
+                    success: false,
                     message: 'Vui lòng tải tiệp có định dạng JPG hoặc PNG '
                 })
             }

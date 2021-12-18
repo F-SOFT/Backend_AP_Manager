@@ -18,7 +18,6 @@ const Course = new Schema({
     level: { type: String, required: true },
     keySearch: { type: String },
     slug: { type: String, slug: 'name', unique: true },
-    teacherId: { type: String, ref: 'User'},
     majorsId: { type: String, ref: 'Majors' },
 }, {
     timestamps: true,
