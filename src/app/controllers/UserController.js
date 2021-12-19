@@ -178,7 +178,7 @@ class UserController {
             .populate('rolesId','name') .populate('majorsId','name')
             .then(users => {
                 if (users) {
-                    res.status(400).json({ 
+                    res.status(200).json({ 
                         success: false,
                         message: 'Username đã tồn tại! Vui lòng thử lại.' 
                     })
@@ -212,7 +212,7 @@ class UserController {
                 });
             })
         } else {
-            res.status(400).json({
+            res.status(200).json({
                 success: false,
                 message: 'Vui lòng nhập đầy đủ thông tin.'
             })
@@ -234,7 +234,7 @@ class UserController {
                         token
                     })
                 } else {
-                    res.status(400).json({ 
+                    res.status(200).json({ 
                         success: false,
                         message: 'Tài khoản không tồn tại!' 
                     });
@@ -287,7 +287,7 @@ class UserController {
                     });
                 })
         } else {
-            res.status(400).json({
+            res.status(200).json({
                 success: false,
                 message: 'Vui lòng nhập đầy đủ thông tin.'
             })
@@ -332,7 +332,7 @@ class UserController {
                         });
                     })
             } else {
-                res.status(400).json({
+                res.status(200).json({
                     success: false,
                     message: 'Vui lòng nhập đầy đủ thông tin.'
                 })
@@ -373,7 +373,7 @@ class UserController {
                     });
                 })
             } else {
-                res.status(400).json({
+                res.status(200).json({
                     success: false,
                     message: 'Vui lòng nhập đầy đủ thông tin.'
                 })
