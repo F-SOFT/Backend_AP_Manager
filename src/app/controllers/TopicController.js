@@ -40,7 +40,7 @@ class TopicController {
 
     //[PUT] /topic/:id
     edit(req, res, next) {
-        if (!req.name == '' && !req.description == '') {
+        if (!req.body.name == '' && !req.body.description == '') {
             Topic.findOneUpdate({ 
                     _id: req.params.id 
                 },
