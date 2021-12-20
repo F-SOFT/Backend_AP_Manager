@@ -20,7 +20,7 @@ class TopicController {
 
     //[POST] /topics/store
     store(req, res, next) {
-        if (!req.name == '' && !req.description == '') {
+        if (!req.body.name == '' && !req.body.description == '') {
             const topic = new Topic(req.body)
             topic.save()
             .then(topic =>{

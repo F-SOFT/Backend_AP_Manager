@@ -131,7 +131,7 @@ class CourseController {
                         const name1 = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
                         const description1 = description.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
                         const keySearch = name + " " + description + " " + name1 + " " + description1;
-                        const course = new Course({ name: name,  description: description,  level: level, majorsId: majorsId, keySearch: keySearch, image: image});
+                        const course = new Course({ name: name,  description: description,  level: level, majorsId: majorsId, keySearch: keySearch, image: image });
                         return course.save();
                     }
                 })
