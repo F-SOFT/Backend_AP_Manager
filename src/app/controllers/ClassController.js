@@ -11,7 +11,7 @@ class ClassControler {
             Classes.find({},{
                 __v: 0, deleted: 0, slug: 0,
             })
-            .limit(limit) .skip(skip) .populate('teacherId', 'fullName') .populate('courseId', 'name')
+            .limit(limit) .skip(skip) .populate('teacherId', 'fullName') .populate('courseId', 'name').populate('studentId', 'fullName')
             .then(classes => {
                 Classes.countDocuments({})
                 .then (total =>{
