@@ -18,6 +18,23 @@ class TopicController {
         });
     }
 
+    topic(req, res, next) {
+        Topic.findOne({_id: req.params.id},{
+            __v: 0,
+            deleted: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            slug: 0,
+        })
+        .then( topic => {
+            res.json(topic);
+        })
+        .catch(err => {
+            res.json({ message: 'Có lỗi! Vui lòng thử lại'})
+        });
+    }
+
+
     //[POST] /topics/store
     store(req, res, next) {
         if (!req.body.name == '' && !req.body.description == '') {
