@@ -7,7 +7,6 @@ const port = process.env.PORT || 4000;
 
 const db = require('./config/db');
 const Route = require('./routes');
-const { use } = require('./routes/userRoute');
 
 //connect to DB
 db.connect();
